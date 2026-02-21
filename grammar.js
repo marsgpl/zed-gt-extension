@@ -2,7 +2,9 @@ module.exports = grammar({
   name: "gt",
 
   rules: {
-    source_file: $ => repeat(choice($.node, $.property, $.error_node, $.blank_line)),
+    source_file: $ => repeat(choice($.comment, $.node, $.property, $.error_node, $.blank_line)),
+
+    comment: $ => seq("#", /[^\n]*/, "\n"),
 
     node: $ => seq(
       /[^\s:][^:\n]*/,

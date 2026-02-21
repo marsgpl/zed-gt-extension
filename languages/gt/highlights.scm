@@ -1,11 +1,14 @@
-; Node names (no indent) - blue
-(node) @type
+; Comments
+(comment) @comment
 
-; Property values (after colon) - blue (node names)
-(property value: (value) @type)
+; Node names (no indent)
+(node) @string
+
+; Property values (after colon)
+(property value: (value) @string)
 
 ; Colon separator
 ":" @punctuation.delimiter
 
-; Error: colon after unindented node name - red
-(error_node) @error
+; Error: colon after unindented node name
+(error_node) @boolean

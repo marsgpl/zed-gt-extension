@@ -1,5 +1,10 @@
 [
   {
+    "type": "comment",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "error_node",
     "named": true,
     "fields": {}
@@ -48,6 +53,10 @@
           "named": true
         },
         {
+          "type": "comment",
+          "named": true
+        },
+        {
           "type": "error_node",
           "named": true
         },
@@ -72,6 +81,10 @@
   },
   {
     "type": "    ",
+    "named": false
+  },
+  {
+    "type": "#",
     "named": false
   },
   {
