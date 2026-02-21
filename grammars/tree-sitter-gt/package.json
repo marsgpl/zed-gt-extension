@@ -1,0 +1,20 @@
+{
+  "name": "tree-sitter-gt",
+  "version": "0.1.0",
+  "description": "Tree-sitter grammar for Graph Text (.gt) files",
+  "main": "bindings/node",
+  "keywords": ["tree-sitter", "parser", "gt"],
+  "tree-sitter": [
+    {
+      "scope": "source.gt",
+      "file-types": ["gt"],
+      "highlights": "queries/highlights.scm"
+    }
+  ],
+  "dependencies": {
+    "nan": "^2.17.0"
+  },
+  "devDependencies": {
+    "tree-sitter-cli": "^0.20.8"
+  }
+}
