@@ -25,7 +25,11 @@
           },
           {
             "type": "SYMBOL",
-            "name": "invalid_indent"
+            "name": "invalid_property"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "wrong_indent"
           },
           {
             "type": "SYMBOL",
@@ -78,6 +82,110 @@
       ]
     },
     "property": {
+      "type": "PREC",
+      "value": 1,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "STRING",
+            "value": "    "
+          },
+          {
+            "type": "FIELD",
+            "name": "key",
+            "content": {
+              "type": "SYMBOL",
+              "name": "key"
+            }
+          },
+          {
+            "type": "STRING",
+            "value": ":"
+          },
+          {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SEQ",
+                "members": [
+                  {
+                    "type": "STRING",
+                    "value": " "
+                  },
+                  {
+                    "type": "FIELD",
+                    "name": "value",
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "value"
+                    }
+                  }
+                ]
+              },
+              {
+                "type": "BLANK"
+              }
+            ]
+          },
+          {
+            "type": "STRING",
+            "value": "\n"
+          }
+        ]
+      }
+    },
+    "key": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "valid_key"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "invalid_key"
+        }
+      ]
+    },
+    "valid_key": {
+      "type": "PREC",
+      "value": 1,
+      "content": {
+        "type": "PATTERN",
+        "value": "[a-zA-Z0-9_\\- ]+"
+      }
+    },
+    "invalid_key": {
+      "type": "PATTERN",
+      "value": "[^:\\n]+"
+    },
+    "value": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "valid_value"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "invalid_value"
+        }
+      ]
+    },
+    "valid_value": {
+      "type": "PREC",
+      "value": 1,
+      "content": {
+        "type": "PATTERN",
+        "value": "[a-zA-Z0-9_\\- ]+"
+      }
+    },
+    "invalid_value": {
+      "type": "PATTERN",
+      "value": "[^\\n]+"
+    },
+    "invalid_property": {
       "type": "SEQ",
       "members": [
         {
@@ -85,41 +193,8 @@
           "value": "    "
         },
         {
-          "type": "FIELD",
-          "name": "key",
-          "content": {
-            "type": "SYMBOL",
-            "name": "key"
-          }
-        },
-        {
-          "type": "STRING",
-          "value": ":"
-        },
-        {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "SEQ",
-              "members": [
-                {
-                  "type": "STRING",
-                  "value": " "
-                },
-                {
-                  "type": "FIELD",
-                  "name": "value",
-                  "content": {
-                    "type": "SYMBOL",
-                    "name": "value"
-                  }
-                }
-              ]
-            },
-            {
-              "type": "BLANK"
-            }
-          ]
+          "type": "PATTERN",
+          "value": "[^\\n]*"
         },
         {
           "type": "STRING",
@@ -127,20 +202,16 @@
         }
       ]
     },
-    "key": {
-      "type": "PATTERN",
-      "value": "[^:\\n]+"
-    },
-    "value": {
-      "type": "PATTERN",
-      "value": "[^\\n]+"
-    },
-    "invalid_indent": {
+    "wrong_indent": {
       "type": "SEQ",
       "members": [
         {
           "type": "PATTERN",
-          "value": " +[^\\n]*"
+          "value": " {1,3}| {5,}"
+        },
+        {
+          "type": "PATTERN",
+          "value": "[^\\n]*"
         },
         {
           "type": "STRING",
