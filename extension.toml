@@ -8,4 +8,4 @@ repository = "https://github.com/marsgpl/zed-gt-extension"
 
 [grammars.gt]
 repository = "https://github.com/marsgpl/zed-gt-extension"
-commit = "1eb52cb1627860ed53e5120c0bb429575d8de1fd"
+commit = "9a4e82dc34a3033ef0ff8b8d152f7938f979a44a"
