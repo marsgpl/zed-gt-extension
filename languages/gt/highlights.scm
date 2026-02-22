@@ -1,17 +1,13 @@
-; Comments
-(comment) @comment
+; Valid node names (no indent)
+(valid_node) @keyword
 
-; Node names (no indent) - valid nodes
-(node) @keyword
-
-; Valid property content
-(valid_key) @property
-(valid_value) @keyword
+; Valid property
+(key) @property
+(value) @keyword
 
 ; Colon separator
 ":" @punctuation.delimiter
 
-; Invalid lines
-(error_node) @comment
-(property_invalid) @comment
-(wrong_indent) @comment
+; Invalid lines (wrong indent, bad chars, wrong format)
+(comment) @comment
+(invalid_line) @comment

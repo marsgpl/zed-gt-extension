@@ -1,68 +1,8 @@
 [
   {
-    "type": "comment",
+    "type": "key",
     "named": true,
     "fields": {}
-  },
-  {
-    "type": "error_node",
-    "named": true,
-    "fields": {}
-  },
-  {
-    "type": "node",
-    "named": true,
-    "fields": {}
-  },
-  {
-    "type": "property",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "property_invalid",
-          "named": true
-        },
-        {
-          "type": "property_valid",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "property_invalid",
-    "named": true,
-    "fields": {}
-  },
-  {
-    "type": "property_valid",
-    "named": true,
-    "fields": {
-      "key": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "valid_key",
-            "named": true
-          }
-        ]
-      },
-      "value": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "valid_value",
-            "named": true
-          }
-        ]
-      }
-    }
   },
   {
     "type": "source_file",
@@ -82,36 +22,41 @@
           "named": true
         },
         {
-          "type": "error_node",
+          "type": "invalid_line",
           "named": true
         },
         {
-          "type": "node",
+          "type": "valid_node",
           "named": true
         },
         {
-          "type": "property",
-          "named": true
-        },
-        {
-          "type": "wrong_indent",
+          "type": "valid_property",
           "named": true
         }
       ]
     }
   },
   {
-    "type": "valid_key",
+    "type": "valid_property",
     "named": true,
-    "fields": {}
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "key",
+          "named": true
+        },
+        {
+          "type": "value",
+          "named": true
+        }
+      ]
+    }
   },
   {
-    "type": "valid_value",
-    "named": true,
-    "fields": {}
-  },
-  {
-    "type": "wrong_indent",
+    "type": "value",
     "named": true,
     "fields": {}
   },
@@ -128,15 +73,23 @@
     "named": false
   },
   {
-    "type": "#",
-    "named": false
-  },
-  {
     "type": ":",
     "named": false
   },
   {
     "type": "blank_line",
+    "named": true
+  },
+  {
+    "type": "comment",
+    "named": true
+  },
+  {
+    "type": "invalid_line",
+    "named": true
+  },
+  {
+    "type": "valid_node",
     "named": true
   }
 ]

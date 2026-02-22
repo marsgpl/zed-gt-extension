@@ -1,60 +1,38 @@
 module.exports = grammar({
   name: "gt",
 
+  extras: $ => [],
+
   rules: {
     source_file: $ => repeat(choice(
+      $.blank_line,
       $.comment,
-      $.node,
-      $.property,
-      $.error_node,
-      $.wrong_indent,
-      $.blank_line
+      $.valid_node,
+      $.valid_property,
+      $.invalid_line
     )),
 
-    comment: $ => seq("#", /[^\n]*/, "\n"),
+    blank_line: $ => /\n/,
 
-    // Valid node name: only alphanumeric, underscore, hyphen, space
-    node: $ => seq(
-      /[a-zA-Z0-9_\- ]+/,
-      "\n"
-    ),
+    comment: $ => token(seq("#", /[^\n]*/, "\n")),
 
-    // Invalid unindented line (has colon or invalid chars)
-    error_node: $ => seq(
-      /[^\s\n][^\n]*/,
-      "\n"
-    ),
+    // Valid node: column 0, valid chars only
+    valid_node: $ => token(seq(/[a-zA-Z0-9_\- ]+/, "\n")),
 
-    // Any line with exactly 4 spaces
-    property: $ => seq(
+    // Valid property: exactly 4 spaces, valid key, colon, space, valid value
+    valid_property: $ => seq(
       "    ",
-      choice(
-        $.property_valid,
-        $.property_invalid
-      ),
+      $.key,
+      token.immediate(":"),
+      " ",
+      $.value,
       "\n"
     ),
 
-    // Valid property content: key: optional value
-    property_valid: $ => prec(1, seq(
-      field("key", $.valid_key),
-      ":",
-      optional(seq(" ", field("value", $.valid_value)))
-    )),
+    key: $ => /[a-zA-Z0-9_\- ]+/,
+    value: $ => /[a-zA-Z0-9_\- ]+/,
 
-    // Invalid property content (no colon, invalid chars, etc.)
-    property_invalid: $ => /[^\n]*/,
-
-    valid_key: $ => /[a-zA-Z0-9_\- ]+/,
-    valid_value: $ => /[a-zA-Z0-9_\- ]+/,
-
-    // Wrong indentation (not 0 or 4 spaces)
-    wrong_indent: $ => seq(
-      / {1,3}| {5,}/,
-      /[^\n]*/,
-      "\n"
-    ),
-
-    blank_line: $ => /\n/
+    // Any other non-empty line is invalid
+    invalid_line: $ => token(prec(-1, seq(/[^\n]+/, "\n"))),
   }
 });
