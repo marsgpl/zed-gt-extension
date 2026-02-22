@@ -26,8 +26,8 @@ inva!id
 
 ## how should it highlight syntax
 
-- unindented line is a node name. valid: @keyword. invalid: @comment. validation regexp: /[a-zA-Z0-9_- ]+/.
-- indented line must have 2 parts: before ":" and after. if there is no ":" then treat whole line as @comment. left part is relation node name. same validation regexp. treat as @property if valid, @comment if invalid. right part is node name. same validation regexp. treat as @keyword if valid, @comment if invalid.
+- unindented line is a node name. valid: @type. invalid: @comment. validation regexp: /[a-z0-9_- ]+/.
+- indented line must have 2 parts: before ":" and after. if there is no ":" then treat whole line as @comment. left part is relation node name. same validation regexp. treat as @property if valid, @comment if invalid. right part is node name. same validation regexp. treat as @type if valid, @comment if invalid.
 
 ## available tokens
 
