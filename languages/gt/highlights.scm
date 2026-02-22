@@ -1,8 +1,11 @@
 ; Comments
 (comment) @comment
 
-; Node names (no indent)
-(node) @string
+; Node names (no indent) - valid nodes
+(node) @keyword
+
+; Property key (relation name)
+(property key: (key) @property)
 
 ; Property values (after colon)
 (property value: (value) @string)
@@ -10,5 +13,6 @@
 ; Colon separator
 ":" @punctuation.delimiter
 
-; Error: colon after unindented node name
-(error_node) @boolean
+; Invalid lines
+(error_node) @comment
+(invalid_indent) @comment

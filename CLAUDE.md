@@ -19,11 +19,8 @@ self
 
 ## how should it highlight syntax
 
-- if no indentation: node name: orange color
-- if indentation (4 spaces "    "): relation name: default color
-- after ":" goes node name relation relates to: orange color
-- if ":" goes after node name that has no indentation: highlight as error (red)
-- node names can contain spaces, marker should be ":"
+- if line does not start with space: it is either a valid node name or invalid. regexp of the valid node name: /[a-zA-Z0-9_- ]+/. valid node name token type: @keyword. invalid: @comment.
+- if line starts with space (indented): it should be a node relation description (graph edge). format: "    rel node name: node name\n". valid line: relation node name keyword type is: @property. invalid line should be @comment.
 
 ## available tokens
 
