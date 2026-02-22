@@ -4,35 +4,39 @@ module.exports = grammar({
   extras: $ => [],
 
   rules: {
-    source_file: $ => repeat(choice(
+    source_file: $ => repeat($._line),
+
+    _line: $ => choice(
       $.blank_line,
-      $.comment,
-      $.valid_node,
-      $.valid_property,
-      $.invalid_line
-    )),
+      $.node_line,
+      $.property_line,
+      $.comment_line,
+      $.invalid_line,
+    ),
 
     blank_line: $ => /\n/,
 
-    comment: $ => token(seq("#", /[^\n]*/, "\n")),
+    // Line starting at column 0 (node name)
+    node_line: $ => seq($.node, /\n/),
+    node: $ => /[^\s\n][^\n]*/,
 
-    // Valid node: column 0, valid chars only
-    valid_node: $ => token(seq(/[a-zA-Z0-9_\- ]+/, "\n")),
-
-    // Valid property: exactly 4 spaces, valid key, colon, space, valid value
-    valid_property: $ => seq(
-      "    ",
+    // Indented line with colon (property)
+    property_line: $ => seq(
+      /[ \t]+/,
       $.key,
-      token.immediate(":"),
-      " ",
-      $.value,
-      "\n"
+      ":",
+      / */,
+      optional($.value),
+      /\n/
     ),
+    key: $ => /[^:\n]+/,
+    value: $ => /[^ \n][^\n]*/,
 
-    key: $ => /[a-zA-Z0-9_\- ]+/,
-    value: $ => /[a-zA-Z0-9_\- ]+/,
+    // Indented line without colon (comment)
+    comment_line: $ => seq($.comment_content, /\n/),
+    comment_content: $ => /[ \t]+[^:\n]*/,
 
-    // Any other non-empty line is invalid
-    invalid_line: $ => token(prec(-1, seq(/[^\n]+/, "\n"))),
+    // Catch-all for unmatched lines
+    invalid_line: $ => token(prec(-1, seq(/[^\n]+/, /\n/))),
   }
 });

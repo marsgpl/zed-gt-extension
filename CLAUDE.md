@@ -26,8 +26,8 @@ inva!id
 
 ## how should it highlight syntax
 
-- if line does not start with space: it is either a valid node name or invalid. regexp of the valid node name: /[a-zA-Z0-9_- ]+/. valid node name token type: @keyword. invalid: @comment.
-- if line starts with space (indented): it should be a node relation description (graph edge). format: "    rel node name: node name\n". valid line: relation node name keyword type is: @property. invalid line should be @comment.
+- unindented line is a node name. valid: @keyword. invalid: @comment. validation regexp: /[a-zA-Z0-9_- ]+/.
+- indented line must have 2 parts: before ":" and after. if there is no ":" then treat whole line as @comment. left part is relation node name. same validation regexp. treat as @property if valid, @comment if invalid. right part is node name. same validation regexp. treat as @keyword if valid, @comment if invalid.
 
 ## available tokens
 

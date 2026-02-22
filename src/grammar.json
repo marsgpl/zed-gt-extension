@@ -5,110 +5,117 @@
     "source_file": {
       "type": "REPEAT",
       "content": {
-        "type": "CHOICE",
-        "members": [
-          {
-            "type": "SYMBOL",
-            "name": "blank_line"
-          },
-          {
-            "type": "SYMBOL",
-            "name": "comment"
-          },
-          {
-            "type": "SYMBOL",
-            "name": "valid_node"
-          },
-          {
-            "type": "SYMBOL",
-            "name": "valid_property"
-          },
-          {
-            "type": "SYMBOL",
-            "name": "invalid_line"
-          }
-        ]
+        "type": "SYMBOL",
+        "name": "_line"
       }
+    },
+    "_line": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "blank_line"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "node_line"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "property_line"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "comment_line"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "invalid_line"
+        }
+      ]
     },
     "blank_line": {
       "type": "PATTERN",
       "value": "\\n"
     },
-    "comment": {
-      "type": "TOKEN",
-      "content": {
-        "type": "SEQ",
-        "members": [
-          {
-            "type": "STRING",
-            "value": "#"
-          },
-          {
-            "type": "PATTERN",
-            "value": "[^\\n]*"
-          },
-          {
-            "type": "STRING",
-            "value": "\n"
-          }
-        ]
-      }
-    },
-    "valid_node": {
-      "type": "TOKEN",
-      "content": {
-        "type": "SEQ",
-        "members": [
-          {
-            "type": "PATTERN",
-            "value": "[a-zA-Z0-9_\\- ]+"
-          },
-          {
-            "type": "STRING",
-            "value": "\n"
-          }
-        ]
-      }
-    },
-    "valid_property": {
+    "node_line": {
       "type": "SEQ",
       "members": [
         {
-          "type": "STRING",
-          "value": "    "
+          "type": "SYMBOL",
+          "name": "node"
+        },
+        {
+          "type": "PATTERN",
+          "value": "\\n"
+        }
+      ]
+    },
+    "node": {
+      "type": "PATTERN",
+      "value": "[^\\s\\n][^\\n]*"
+    },
+    "property_line": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "PATTERN",
+          "value": "[ \\t]+"
         },
         {
           "type": "SYMBOL",
           "name": "key"
         },
         {
-          "type": "IMMEDIATE_TOKEN",
-          "content": {
-            "type": "STRING",
-            "value": ":"
-          }
-        },
-        {
           "type": "STRING",
-          "value": " "
+          "value": ":"
         },
         {
-          "type": "SYMBOL",
-          "name": "value"
+          "type": "PATTERN",
+          "value": " *"
         },
         {
-          "type": "STRING",
-          "value": "\n"
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "value"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "PATTERN",
+          "value": "\\n"
         }
       ]
     },
     "key": {
       "type": "PATTERN",
-      "value": "[a-zA-Z0-9_\\- ]+"
+      "value": "[^:\\n]+"
     },
     "value": {
       "type": "PATTERN",
-      "value": "[a-zA-Z0-9_\\- ]+"
+      "value": "[^ \\n][^\\n]*"
+    },
+    "comment_line": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "comment_content"
+        },
+        {
+          "type": "PATTERN",
+          "value": "\\n"
+        }
+      ]
+    },
+    "comment_content": {
+      "type": "PATTERN",
+      "value": "[ \\t]+[^:\\n]*"
     },
     "invalid_line": {
       "type": "TOKEN",
@@ -123,8 +130,8 @@
               "value": "[^\\n]+"
             },
             {
-              "type": "STRING",
-              "value": "\n"
+              "type": "PATTERN",
+              "value": "\\n"
             }
           ]
         }
