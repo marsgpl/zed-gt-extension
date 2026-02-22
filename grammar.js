@@ -8,35 +8,36 @@ module.exports = grammar({
 
     _line: $ => choice(
       $.blank_line,
-      $.node_line,
+      $.valid_node,
+      $.invalid_node,
       $.property_line,
       $.comment_line,
-      $.invalid_line,
     ),
 
     blank_line: $ => /\n/,
 
-    // Line starting at column 0 (node name)
-    node_line: $ => seq($.node, /\n/),
-    node: $ => /[^\s\n][^\n]*/,
+    // Valid node: unindented, valid chars only
+    valid_node: $ => token(prec(1, seq(/[a-zA-Z0-9_\- ]+/, /\n/))),
+
+    // Invalid node: unindented, contains invalid chars
+    invalid_node: $ => token(seq(/[^\s\n][^\n]*/, /\n/)),
 
     // Indented line with colon (property)
     property_line: $ => seq(
       /[ \t]+/,
-      $.key,
+      choice($.valid_key, $.invalid_key),
       ":",
-      / */,
-      optional($.value),
+      optional(seq(/ +/, choice($.valid_value, $.invalid_value))),
       /\n/
     ),
-    key: $ => /[^:\n]+/,
-    value: $ => /[^ \n][^\n]*/,
+
+    valid_key: $ => token(prec(1, /[a-zA-Z0-9_\- ]+/)),
+    invalid_key: $ => /[^:\n]+/,
+
+    valid_value: $ => token(prec(1, /[a-zA-Z0-9_\- ]+/)),
+    invalid_value: $ => /[^\n]+/,
 
     // Indented line without colon (comment)
-    comment_line: $ => seq($.comment_content, /\n/),
-    comment_content: $ => /[ \t]+[^:\n]*/,
-
-    // Catch-all for unmatched lines
-    invalid_line: $ => token(prec(-1, seq(/[^\n]+/, /\n/))),
+    comment_line: $ => token(seq(/[ \t]+[^:\n]*/, /\n/)),
   }
 });

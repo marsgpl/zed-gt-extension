@@ -1,32 +1,23 @@
-; Valid node names (unindented, valid chars only)
-((node) @keyword
- (#match? @keyword "^[a-zA-Z0-9_ -]+$"))
+; Valid node names
+(valid_node) @keyword
 
 ; Invalid node names
-((node) @comment
- (#not-match? @comment "^[a-zA-Z0-9_ -]+$"))
+(invalid_node) @comment
 
-; Valid keys (relation names)
-((key) @property
- (#match? @property "^[a-zA-Z0-9_ -]+$"))
+; Valid keys
+(valid_key) @property
 
 ; Invalid keys
-((key) @comment
- (#not-match? @comment "^[a-zA-Z0-9_ -]+$"))
+(invalid_key) @comment
 
-; Valid values (node names)
-((value) @keyword
- (#match? @keyword "^[a-zA-Z0-9_ -]+$"))
+; Valid values
+(valid_value) @keyword
 
 ; Invalid values
-((value) @comment
- (#not-match? @comment "^[a-zA-Z0-9_ -]+$"))
+(invalid_value) @comment
 
 ; Colon separator
 ":" @punctuation.delimiter
 
 ; Comment lines (indented without colon)
-(comment_content) @comment
-
-; Invalid/unmatched lines
-(invalid_line) @comment
+(comment_line) @comment
