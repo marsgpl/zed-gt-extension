@@ -5,7 +5,7 @@
     "fields": {}
   },
   {
-    "type": "property_line",
+    "type": "property",
     "named": true,
     "fields": {},
     "children": {
@@ -13,19 +13,11 @@
       "required": true,
       "types": [
         {
-          "type": "invalid_key",
+          "type": "key",
           "named": true
         },
         {
-          "type": "invalid_value",
-          "named": true
-        },
-        {
-          "type": "valid_key",
-          "named": true
-        },
-        {
-          "type": "valid_value",
+          "type": "value",
           "named": true
         }
       ]
@@ -45,56 +37,38 @@
           "named": true
         },
         {
-          "type": "comment_line",
+          "type": "comment",
           "named": true
         },
         {
-          "type": "invalid_node",
+          "type": "node",
           "named": true
         },
         {
-          "type": "property_line",
-          "named": true
-        },
-        {
-          "type": "valid_node",
+          "type": "property",
           "named": true
         }
       ]
     }
   },
   {
-    "type": "valid_key",
-    "named": true,
-    "fields": {}
-  },
-  {
-    "type": "valid_value",
-    "named": true,
-    "fields": {}
-  },
-  {
     "type": ":",
     "named": false
   },
   {
-    "type": "comment_line",
+    "type": "comment",
     "named": true
   },
   {
-    "type": "invalid_key",
+    "type": "key",
     "named": true
   },
   {
-    "type": "invalid_node",
+    "type": "node",
     "named": true
   },
   {
-    "type": "invalid_value",
-    "named": true
-  },
-  {
-    "type": "valid_node",
+    "type": "value",
     "named": true
   }
 ]
