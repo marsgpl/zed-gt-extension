@@ -55,8 +55,8 @@
       "type": "SEQ",
       "members": [
         {
-          "type": "PATTERN",
-          "value": "[ \\t]+"
+          "type": "STRING",
+          "value": "    "
         },
         {
           "type": "SYMBOL",
@@ -67,7 +67,7 @@
           "value": ":"
         },
         {
-          "type": "PATTERN",
+          "type": "STRING",
           "value": " "
         },
         {

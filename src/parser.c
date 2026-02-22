@@ -22,9 +22,9 @@
 enum ts_symbol_identifiers {
   aux_sym_blank_line_token1 = 1,
   sym_node = 2,
-  aux_sym_property_token1 = 3,
+  anon_sym_ = 3,
   anon_sym_COLON = 4,
-  aux_sym_property_token2 = 5,
+  anon_sym_SPACE = 5,
   sym_key = 6,
   sym_value = 7,
   sym_comment = 8,
@@ -40,9 +40,9 @@ static const char * const ts_symbol_names[] = {
   [ts_builtin_sym_end] = "end",
   [aux_sym_blank_line_token1] = "blank_line_token1",
   [sym_node] = "node",
-  [aux_sym_property_token1] = "property_token1",
+  [anon_sym_] = "    ",
   [anon_sym_COLON] = ":",
-  [aux_sym_property_token2] = "property_token2",
+  [anon_sym_SPACE] = " ",
   [sym_key] = "key",
   [sym_value] = "value",
   [sym_comment] = "comment",
@@ -58,9 +58,9 @@ static const TSSymbol ts_symbol_map[] = {
   [ts_builtin_sym_end] = ts_builtin_sym_end,
   [aux_sym_blank_line_token1] = aux_sym_blank_line_token1,
   [sym_node] = sym_node,
-  [aux_sym_property_token1] = aux_sym_property_token1,
+  [anon_sym_] = anon_sym_,
   [anon_sym_COLON] = anon_sym_COLON,
-  [aux_sym_property_token2] = aux_sym_property_token2,
+  [anon_sym_SPACE] = anon_sym_SPACE,
   [sym_key] = sym_key,
   [sym_value] = sym_value,
   [sym_comment] = sym_comment,
@@ -85,16 +85,16 @@ static const TSSymbolMetadata ts_symbol_metadata[] = {
     .visible = true,
     .named = true,
   },
-  [aux_sym_property_token1] = {
-    .visible = false,
+  [anon_sym_] = {
+    .visible = true,
     .named = false,
   },
   [anon_sym_COLON] = {
     .visible = true,
     .named = false,
   },
-  [aux_sym_property_token2] = {
-    .visible = false,
+  [anon_sym_SPACE] = {
+    .visible = true,
     .named = false,
   },
   [sym_key] = {
@@ -165,64 +165,93 @@ static bool ts_lex(TSLexer *lexer, TSStateId state) {
   eof = lexer->eof(lexer);
   switch (state) {
     case 0:
-      if (eof) ADVANCE(5);
-      if (lookahead == '\t') ADVANCE(8);
-      if (lookahead == '\n') ADVANCE(6);
-      if (lookahead == ' ') ADVANCE(8);
-      if (lookahead == ':') ADVANCE(9);
+      if (eof) ADVANCE(10);
+      if (lookahead == '\t') ADVANCE(4);
+      if (lookahead == '\n') ADVANCE(11);
+      if (lookahead == ' ') ADVANCE(15);
+      if (lookahead == ':') ADVANCE(14);
       END_STATE();
     case 1:
-      if (lookahead == ' ') ADVANCE(10);
+      if (lookahead == '\t') ADVANCE(4);
+      if (lookahead == '\n') ADVANCE(18);
+      if (lookahead == ' ') ADVANCE(13);
+      if (lookahead != 0) ADVANCE(5);
       END_STATE();
     case 2:
-      if (lookahead != 0 &&
-          lookahead != '\n' &&
-          lookahead != ':') ADVANCE(11);
+      if (lookahead == '\t') ADVANCE(4);
+      if (lookahead == '\n') ADVANCE(18);
+      if (lookahead == ' ') ADVANCE(1);
+      if (lookahead != 0) ADVANCE(5);
       END_STATE();
     case 3:
+      if (lookahead == '\t') ADVANCE(4);
+      if (lookahead == '\n') ADVANCE(18);
+      if (lookahead == ' ') ADVANCE(2);
+      if (lookahead != 0) ADVANCE(5);
+      END_STATE();
+    case 4:
+      if (lookahead == '\n') ADVANCE(18);
+      if (lookahead == '\t' ||
+          lookahead == ' ') ADVANCE(4);
+      if (lookahead != 0) ADVANCE(5);
+      END_STATE();
+    case 5:
+      if (lookahead == '\n') ADVANCE(18);
+      if (lookahead != 0) ADVANCE(5);
+      END_STATE();
+    case 6:
+      if (lookahead == ' ') ADVANCE(15);
+      END_STATE();
+    case 7:
+      if (lookahead != 0 &&
+          lookahead != '\n' &&
+          lookahead != ':') ADVANCE(16);
+      END_STATE();
+    case 8:
+      if (lookahead != 0 &&
+          lookahead != '\n') ADVANCE(17);
+      END_STATE();
+    case 9:
+      if (eof) ADVANCE(10);
+      if (lookahead == '\t') ADVANCE(4);
+      if (lookahead == '\n') ADVANCE(11);
+      if (lookahead == ' ') ADVANCE(3);
+      if (lookahead != 0 &&
+          (lookahead < '\t' || '\r' < lookahead)) ADVANCE(12);
+      END_STATE();
+    case 10:
+      ACCEPT_TOKEN(ts_builtin_sym_end);
+      END_STATE();
+    case 11:
+      ACCEPT_TOKEN(aux_sym_blank_line_token1);
+      END_STATE();
+    case 12:
+      ACCEPT_TOKEN(sym_node);
       if (lookahead != 0 &&
           lookahead != '\n') ADVANCE(12);
       END_STATE();
-    case 4:
-      if (eof) ADVANCE(5);
-      if (lookahead == '\n') ADVANCE(6);
-      if (lookahead == '\t' ||
-          lookahead == ' ') ADVANCE(8);
-      if (lookahead != 0 &&
-          (lookahead < '\t' || '\r' < lookahead)) ADVANCE(7);
+    case 13:
+      ACCEPT_TOKEN(anon_sym_);
       END_STATE();
-    case 5:
-      ACCEPT_TOKEN(ts_builtin_sym_end);
-      END_STATE();
-    case 6:
-      ACCEPT_TOKEN(aux_sym_blank_line_token1);
-      END_STATE();
-    case 7:
-      ACCEPT_TOKEN(sym_node);
-      if (lookahead != 0 &&
-          lookahead != '\n') ADVANCE(7);
-      END_STATE();
-    case 8:
-      ACCEPT_TOKEN(aux_sym_property_token1);
-      if (lookahead == '\t' ||
-          lookahead == ' ') ADVANCE(8);
-      END_STATE();
-    case 9:
+    case 14:
       ACCEPT_TOKEN(anon_sym_COLON);
       END_STATE();
-    case 10:
-      ACCEPT_TOKEN(aux_sym_property_token2);
+    case 15:
+      ACCEPT_TOKEN(anon_sym_SPACE);
       END_STATE();
-    case 11:
+    case 16:
       ACCEPT_TOKEN(sym_key);
       if (lookahead != 0 &&
           lookahead != '\n' &&
-          lookahead != ':') ADVANCE(11);
+          lookahead != ':') ADVANCE(16);
       END_STATE();
-    case 12:
+    case 17:
       ACCEPT_TOKEN(sym_value);
       if (lookahead != 0 &&
-          lookahead != '\n') ADVANCE(12);
+          lookahead != '\n') ADVANCE(17);
+      END_STATE();
+    case 18:
+      ACCEPT_TOKEN(sym_comment);
       END_STATE();
     default:
       return false;
@@ -231,18 +260,18 @@ static bool ts_lex(TSLexer *lexer, TSStateId state) {
 
 static const TSLexerMode ts_lex_modes[STATE_COUNT] = {
   [0] = {.lex_state = 0},
-  [1] = {.lex_state = 4},
-  [2] = {.lex_state = 4},
-  [3] = {.lex_state = 4},
-  [4] = {.lex_state = 4},
-  [5] = {.lex_state = 4},
-  [6] = {.lex_state = 4},
+  [1] = {.lex_state = 9},
+  [2] = {.lex_state = 9},
+  [3] = {.lex_state = 9},
+  [4] = {.lex_state = 9},
+  [5] = {.lex_state = 9},
+  [6] = {.lex_state = 9},
   [7] = {.lex_state = 0},
-  [8] = {.lex_state = 2},
+  [8] = {.lex_state = 7},
   [9] = {.lex_state = 0},
   [10] = {.lex_state = 0},
-  [11] = {.lex_state = 1},
-  [12] = {.lex_state = 3},
+  [11] = {.lex_state = 6},
+  [12] = {.lex_state = 8},
   [13] = {.lex_state = 0},
 };
 
@@ -250,9 +279,8 @@ static const uint16_t ts_parse_table[LARGE_STATE_COUNT][SYMBOL_COUNT] = {
   [STATE(0)] = {
     [ts_builtin_sym_end] = ACTIONS(1),
     [aux_sym_blank_line_token1] = ACTIONS(1),
-    [aux_sym_property_token1] = ACTIONS(1),
     [anon_sym_COLON] = ACTIONS(1),
-    [aux_sym_property_token2] = ACTIONS(1),
+    [anon_sym_SPACE] = ACTIONS(1),
     [sym_comment] = ACTIONS(1),
   },
   [STATE(1)] = {
@@ -265,7 +293,7 @@ static const uint16_t ts_parse_table[LARGE_STATE_COUNT][SYMBOL_COUNT] = {
     [ts_builtin_sym_end] = ACTIONS(3),
     [aux_sym_blank_line_token1] = ACTIONS(5),
     [sym_node] = ACTIONS(7),
-    [aux_sym_property_token1] = ACTIONS(9),
+    [anon_sym_] = ACTIONS(9),
     [sym_comment] = ACTIONS(11),
   },
   [STATE(2)] = {
@@ -277,7 +305,7 @@ static const uint16_t ts_parse_table[LARGE_STATE_COUNT][SYMBOL_COUNT] = {
     [ts_builtin_sym_end] = ACTIONS(13),
     [aux_sym_blank_line_token1] = ACTIONS(5),
     [sym_node] = ACTIONS(7),
-    [aux_sym_property_token1] = ACTIONS(9),
+    [anon_sym_] = ACTIONS(9),
     [sym_comment] = ACTIONS(15),
   },
   [STATE(3)] = {
@@ -289,7 +317,7 @@ static const uint16_t ts_parse_table[LARGE_STATE_COUNT][SYMBOL_COUNT] = {
     [ts_builtin_sym_end] = ACTIONS(17),
     [aux_sym_blank_line_token1] = ACTIONS(19),
     [sym_node] = ACTIONS(22),
-    [aux_sym_property_token1] = ACTIONS(25),
+    [anon_sym_] = ACTIONS(25),
     [sym_comment] = ACTIONS(28),
   },
 };
@@ -302,7 +330,7 @@ static const uint16_t ts_small_parse_table[] = {
       ts_builtin_sym_end,
       aux_sym_blank_line_token1,
       sym_node,
-      aux_sym_property_token1,
+      anon_sym_,
   [10] = 2,
     ACTIONS(37), 1,
       sym_comment,
@@ -310,7 +338,7 @@ static const uint16_t ts_small_parse_table[] = {
       ts_builtin_sym_end,
       aux_sym_blank_line_token1,
       sym_node,
-      aux_sym_property_token1,
+      anon_sym_,
   [20] = 2,
     ACTIONS(41), 1,
       sym_comment,
@@ -318,7 +346,7 @@ static const uint16_t ts_small_parse_table[] = {
       ts_builtin_sym_end,
       aux_sym_blank_line_token1,
       sym_node,
-      aux_sym_property_token1,
+      anon_sym_,
   [30] = 1,
     ACTIONS(43), 1,
       aux_sym_blank_line_token1,
@@ -333,7 +361,7 @@ static const uint16_t ts_small_parse_table[] = {
       anon_sym_COLON,
   [46] = 1,
     ACTIONS(51), 1,
-      aux_sym_property_token2,
+      anon_sym_SPACE,
   [50] = 1,
     ACTIONS(53), 1,
       sym_value,

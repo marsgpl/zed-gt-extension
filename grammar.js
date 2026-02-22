@@ -19,10 +19,10 @@ module.exports = grammar({
     node: $ => /[^\s\n][^\n]*/,
 
     property: $ => seq(
-      /[ \t]+/,
+      "    ",
       $.key,
       ":",
-      / /,
+      " ",
       $.value,
       /\n/
     ),
