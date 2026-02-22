@@ -18,7 +18,7 @@
         },
         {
           "type": "SYMBOL",
-          "name": "node"
+          "name": "node_line"
         },
         {
           "type": "SYMBOL",
@@ -34,21 +34,22 @@
       "type": "PATTERN",
       "value": "\\n"
     },
+    "node_line": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "node"
+        },
+        {
+          "type": "PATTERN",
+          "value": "\\n"
+        }
+      ]
+    },
     "node": {
-      "type": "TOKEN",
-      "content": {
-        "type": "SEQ",
-        "members": [
-          {
-            "type": "PATTERN",
-            "value": "[^\\s\\n][^\\n]*"
-          },
-          {
-            "type": "PATTERN",
-            "value": "\\n"
-          }
-        ]
-      }
+      "type": "PATTERN",
+      "value": "[^\\s\\n][^\\n]*"
     },
     "property": {
       "type": "SEQ",

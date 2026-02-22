@@ -8,14 +8,15 @@ module.exports = grammar({
 
     _line: $ => choice(
       $.blank_line,
-      $.node,
+      $.node_line,
       $.property,
       $.comment,
     ),
 
     blank_line: $ => /\n/,
 
-    node: $ => token(seq(/[^\s\n][^\n]*/, /\n/)),
+    node_line: $ => seq($.node, /\n/),
+    node: $ => /[^\s\n][^\n]*/,
 
     property: $ => seq(
       /[ \t]+/,
