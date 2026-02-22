@@ -149,16 +149,16 @@
       ]
     },
     "valid_key": {
-      "type": "PREC",
-      "value": 1,
-      "content": {
-        "type": "PATTERN",
-        "value": "[a-zA-Z0-9_\\- ]+"
-      }
+      "type": "PATTERN",
+      "value": "[a-zA-Z0-9_\\- ]+"
     },
     "invalid_key": {
-      "type": "PATTERN",
-      "value": "[^:\\n]+"
+      "type": "PREC",
+      "value": -1,
+      "content": {
+        "type": "PATTERN",
+        "value": "[^:\\n]+"
+      }
     },
     "value": {
       "type": "CHOICE",
@@ -174,33 +174,37 @@
       ]
     },
     "valid_value": {
-      "type": "PREC",
-      "value": 1,
-      "content": {
-        "type": "PATTERN",
-        "value": "[a-zA-Z0-9_\\- ]+"
-      }
+      "type": "PATTERN",
+      "value": "[a-zA-Z0-9_\\- ]+"
     },
     "invalid_value": {
-      "type": "PATTERN",
-      "value": "[^\\n]+"
+      "type": "PREC",
+      "value": -1,
+      "content": {
+        "type": "PATTERN",
+        "value": "[^\\n]+"
+      }
     },
     "invalid_property": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "STRING",
-          "value": "    "
-        },
-        {
-          "type": "PATTERN",
-          "value": "[^\\n]*"
-        },
-        {
-          "type": "STRING",
-          "value": "\n"
-        }
-      ]
+      "type": "PREC",
+      "value": -2,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "STRING",
+            "value": "    "
+          },
+          {
+            "type": "PATTERN",
+            "value": "[^\\n]*"
+          },
+          {
+            "type": "STRING",
+            "value": "\n"
+          }
+        ]
+      }
     },
     "wrong_indent": {
       "type": "SEQ",

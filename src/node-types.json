@@ -10,7 +10,17 @@
     "fields": {}
   },
   {
+    "type": "invalid_key",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "invalid_property",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "invalid_value",
     "named": true,
     "fields": {}
   },
@@ -160,14 +170,6 @@
   },
   {
     "type": "blank_line",
-    "named": true
-  },
-  {
-    "type": "invalid_key",
-    "named": true
-  },
-  {
-    "type": "invalid_value",
     "named": true
   }
 ]

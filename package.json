@@ -15,7 +15,7 @@
   "type": "commonjs",
   "main": "grammar.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "release": "npx tree-sitter generate && git add -A && git commit -m 'regenerate grammar' && HASH=$(git rev-parse HEAD) && sed -i '' \"s/^commit = .*/commit = \\\"$HASH\\\"/\" extension.toml && git add extension.toml && git commit -m 'hash bump' && git push"
   },
   "devDependencies": {
     "tree-sitter-cli": "^0.26.5"

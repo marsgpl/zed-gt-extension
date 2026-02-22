@@ -36,19 +36,19 @@ module.exports = grammar({
     )),
 
     key: $ => choice($.valid_key, $.invalid_key),
-    valid_key: $ => prec(1, /[a-zA-Z0-9_\- ]+/),
-    invalid_key: $ => /[^:\n]+/,
+    valid_key: $ => /[a-zA-Z0-9_\- ]+/,
+    invalid_key: $ => prec(-1, /[^:\n]+/),
 
     value: $ => choice($.valid_value, $.invalid_value),
-    valid_value: $ => prec(1, /[a-zA-Z0-9_\- ]+/),
-    invalid_value: $ => /[^\n]+/,
+    valid_value: $ => /[a-zA-Z0-9_\- ]+/,
+    invalid_value: $ => prec(-1, /[^\n]+/),
 
     // 4 spaces but wrong format (no colon, etc.)
-    invalid_property: $ => seq(
+    invalid_property: $ => prec(-2, seq(
       "    ",
       /[^\n]*/,
       "\n"
-    ),
+    )),
 
     // Wrong indentation (not 0 or 4 spaces)
     wrong_indent: $ => seq(

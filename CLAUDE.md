@@ -20,6 +20,8 @@ bank
     adjacent to: water
 apple
     is: fruit
+inva!id
+  bad indent: ok?
 ```
 
 ## how should it highlight syntax
