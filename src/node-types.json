@@ -10,40 +10,6 @@
     "fields": {}
   },
   {
-    "type": "invalid_key",
-    "named": true,
-    "fields": {}
-  },
-  {
-    "type": "invalid_property",
-    "named": true,
-    "fields": {}
-  },
-  {
-    "type": "invalid_value",
-    "named": true,
-    "fields": {}
-  },
-  {
-    "type": "key",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "invalid_key",
-          "named": true
-        },
-        {
-          "type": "valid_key",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "node",
     "named": true,
     "fields": {}
@@ -51,13 +17,37 @@
   {
     "type": "property",
     "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "property_invalid",
+          "named": true
+        },
+        {
+          "type": "property_valid",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "property_invalid",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "property_valid",
+    "named": true,
     "fields": {
       "key": {
         "multiple": false,
         "required": true,
         "types": [
           {
-            "type": "key",
+            "type": "valid_key",
             "named": true
           }
         ]
@@ -67,7 +57,7 @@
         "required": false,
         "types": [
           {
-            "type": "value",
+            "type": "valid_value",
             "named": true
           }
         ]
@@ -96,10 +86,6 @@
           "named": true
         },
         {
-          "type": "invalid_property",
-          "named": true
-        },
-        {
           "type": "node",
           "named": true
         },
@@ -123,25 +109,6 @@
     "type": "valid_value",
     "named": true,
     "fields": {}
-  },
-  {
-    "type": "value",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "invalid_value",
-          "named": true
-        },
-        {
-          "type": "valid_value",
-          "named": true
-        }
-      ]
-    }
   },
   {
     "type": "wrong_indent",

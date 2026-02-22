@@ -7,7 +7,6 @@ module.exports = grammar({
       $.node,
       $.property,
       $.error_node,
-      $.invalid_property,
       $.wrong_indent,
       $.blank_line
     )),
@@ -26,29 +25,28 @@ module.exports = grammar({
       "\n"
     ),
 
-    // Valid property: exactly 4 spaces, key, colon, optional value
-    property: $ => prec(1, seq(
+    // Any line with exactly 4 spaces
+    property: $ => seq(
       "    ",
-      field("key", $.key),
+      choice(
+        $.property_valid,
+        $.property_invalid
+      ),
+      "\n"
+    ),
+
+    // Valid property content: key: optional value
+    property_valid: $ => prec(1, seq(
+      field("key", $.valid_key),
       ":",
-      optional(seq(" ", field("value", $.value))),
-      "\n"
+      optional(seq(" ", field("value", $.valid_value)))
     )),
 
-    key: $ => choice($.valid_key, $.invalid_key),
+    // Invalid property content (no colon, invalid chars, etc.)
+    property_invalid: $ => /[^\n]*/,
+
     valid_key: $ => /[a-zA-Z0-9_\- ]+/,
-    invalid_key: $ => prec(-1, /[^:\n]+/),
-
-    value: $ => choice($.valid_value, $.invalid_value),
     valid_value: $ => /[a-zA-Z0-9_\- ]+/,
-    invalid_value: $ => prec(-1, /[^\n]+/),
-
-    // 4 spaces but wrong format (no colon, etc.)
-    invalid_property: $ => prec(-2, seq(
-      "    ",
-      /[^\n]*/,
-      "\n"
-    )),
 
     // Wrong indentation (not 0 or 4 spaces)
     wrong_indent: $ => seq(

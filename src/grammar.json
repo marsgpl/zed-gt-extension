@@ -25,10 +25,6 @@
           },
           {
             "type": "SYMBOL",
-            "name": "invalid_property"
-          },
-          {
-            "type": "SYMBOL",
             "name": "wrong_indent"
           },
           {
@@ -82,21 +78,43 @@
       ]
     },
     "property": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "    "
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "property_valid"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "property_invalid"
+            }
+          ]
+        },
+        {
+          "type": "STRING",
+          "value": "\n"
+        }
+      ]
+    },
+    "property_valid": {
       "type": "PREC",
       "value": 1,
       "content": {
         "type": "SEQ",
         "members": [
           {
-            "type": "STRING",
-            "value": "    "
-          },
-          {
             "type": "FIELD",
             "name": "key",
             "content": {
               "type": "SYMBOL",
-              "name": "key"
+              "name": "valid_key"
             }
           },
           {
@@ -118,7 +136,7 @@
                     "name": "value",
                     "content": {
                       "type": "SYMBOL",
-                      "name": "value"
+                      "name": "valid_value"
                     }
                   }
                 ]
@@ -127,84 +145,21 @@
                 "type": "BLANK"
               }
             ]
-          },
-          {
-            "type": "STRING",
-            "value": "\n"
           }
         ]
       }
     },
-    "key": {
-      "type": "CHOICE",
-      "members": [
-        {
-          "type": "SYMBOL",
-          "name": "valid_key"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "invalid_key"
-        }
-      ]
+    "property_invalid": {
+      "type": "PATTERN",
+      "value": "[^\\n]*"
     },
     "valid_key": {
       "type": "PATTERN",
       "value": "[a-zA-Z0-9_\\- ]+"
     },
-    "invalid_key": {
-      "type": "PREC",
-      "value": -1,
-      "content": {
-        "type": "PATTERN",
-        "value": "[^:\\n]+"
-      }
-    },
-    "value": {
-      "type": "CHOICE",
-      "members": [
-        {
-          "type": "SYMBOL",
-          "name": "valid_value"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "invalid_value"
-        }
-      ]
-    },
     "valid_value": {
       "type": "PATTERN",
       "value": "[a-zA-Z0-9_\\- ]+"
-    },
-    "invalid_value": {
-      "type": "PREC",
-      "value": -1,
-      "content": {
-        "type": "PATTERN",
-        "value": "[^\\n]+"
-      }
-    },
-    "invalid_property": {
-      "type": "PREC",
-      "value": -2,
-      "content": {
-        "type": "SEQ",
-        "members": [
-          {
-            "type": "STRING",
-            "value": "    "
-          },
-          {
-            "type": "PATTERN",
-            "value": "[^\\n]*"
-          },
-          {
-            "type": "STRING",
-            "value": "\n"
-          }
-        ]
-      }
     },
     "wrong_indent": {
       "type": "SEQ",
