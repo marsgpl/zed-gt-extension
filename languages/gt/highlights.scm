@@ -1,6 +1,6 @@
 ; Valid node
-((node) @keyword
- (#match? @keyword "^[a-zA-Z0-9_-]+( [a-zA-Z0-9_-]+)*$"))
+((node) @type
+ (#match? @type "^[a-zA-Z0-9_-]+( [a-zA-Z0-9_-]+)*$"))
 
 ; Invalid node
 ((node) @comment
@@ -15,8 +15,8 @@
  (#not-match? @comment "^[a-zA-Z0-9_-]+( [a-zA-Z0-9_-]+)*$"))
 
 ; Valid value
-((value) @keyword
- (#match? @keyword "^[a-zA-Z0-9_-]+( [a-zA-Z0-9_-]+)*$"))
+((value) @type
+ (#match? @type "^[a-zA-Z0-9_-]+( [a-zA-Z0-9_-]+)*$"))
 
 ; Invalid value
 ((value) @comment
