@@ -4,7 +4,8 @@ this is a zed editor extension to highlight syntax for custom text file "gt". ze
 
 ## instructions
 
-- never run commands like npx yourself: always ask user
+- never run commands like npx yourself, always ask user
+- never update the grammars folder (it is auto-generated)
 
 ## example
 

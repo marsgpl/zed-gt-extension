@@ -5,14 +5,17 @@
 (node) @keyword
 
 ; Property key (relation name)
-(property key: (key) @property)
+(valid_key) @property
+(invalid_key) @comment
 
 ; Property values (after colon)
-(property value: (value) @string)
+(valid_value) @keyword
+(invalid_value) @comment
 
 ; Colon separator
 ":" @punctuation.delimiter
 
 ; Invalid lines
 (error_node) @comment
-(invalid_indent) @comment
+(invalid_property) @comment
+(wrong_indent) @comment
