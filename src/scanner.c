@@ -66,6 +66,15 @@ bool tree_sitter_gt_external_scanner_scan(
       while (lexer->lookahead == '\n') {
         lexer->advance(lexer, false);
       }
+      // Zed doesn't render syntax-highlight backgrounds on byte ranges
+      // that contain only \n characters, so absorb one additional
+      // non-\n byte (if present) to give the highlight something
+      // visible to attach to. The next line's first character will
+      // appear in the error color rather than its normal color, but
+      // that's the price of making blank-line errors visible.
+      if (lexer->lookahead != 0 && lexer->lookahead != '\n') {
+        lexer->advance(lexer, false);
+      }
       if (!valid_symbols[BLANK_ERROR]) return false;
       lexer->result_symbol = BLANK_ERROR;
       lexer->mark_end(lexer);
