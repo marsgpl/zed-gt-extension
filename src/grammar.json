@@ -14,7 +14,7 @@
       "members": [
         {
           "type": "SYMBOL",
-          "name": "blank_line"
+          "name": "_blank_line"
         },
         {
           "type": "SYMBOL",
@@ -22,15 +22,15 @@
         },
         {
           "type": "SYMBOL",
-          "name": "property"
+          "name": "edge_line"
         },
         {
           "type": "SYMBOL",
-          "name": "comment"
+          "name": "error_line"
         }
       ]
     },
-    "blank_line": {
+    "_blank_line": {
       "type": "PATTERN",
       "value": "\\n"
     },
@@ -39,7 +39,7 @@
       "members": [
         {
           "type": "SYMBOL",
-          "name": "node"
+          "name": "node_name"
         },
         {
           "type": "PATTERN",
@@ -47,11 +47,7 @@
         }
       ]
     },
-    "node": {
-      "type": "PATTERN",
-      "value": "[^\\s\\n][^\\n]*"
-    },
-    "property": {
+    "edge_line": {
       "type": "SEQ",
       "members": [
         {
@@ -60,7 +56,7 @@
         },
         {
           "type": "SYMBOL",
-          "name": "key"
+          "name": "edge_name"
         },
         {
           "type": "STRING",
@@ -72,7 +68,7 @@
         },
         {
           "type": "SYMBOL",
-          "name": "value"
+          "name": "target_name"
         },
         {
           "type": "PATTERN",
@@ -80,31 +76,26 @@
         }
       ]
     },
-    "key": {
+    "node_name": {
       "type": "PATTERN",
-      "value": "[^:\\n]+"
+      "value": "[a-zA-Z0-9_\\-]+( [a-zA-Z0-9_\\-]+)*"
     },
-    "value": {
+    "edge_name": {
       "type": "PATTERN",
-      "value": "[^\\n]+"
+      "value": "[a-zA-Z0-9_\\-]+( [a-zA-Z0-9_\\-]+)*"
     },
-    "comment": {
+    "target_name": {
+      "type": "PATTERN",
+      "value": "[a-zA-Z0-9_\\-]+( [a-zA-Z0-9_\\-]+)*"
+    },
+    "error_line": {
       "type": "TOKEN",
       "content": {
         "type": "PREC",
         "value": -1,
         "content": {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "PATTERN",
-              "value": "[ \\t]+[^\\n]*"
-            },
-            {
-              "type": "PATTERN",
-              "value": "\\n"
-            }
-          ]
+          "type": "PATTERN",
+          "value": "[^\\n]+\\n?"
         }
       }
     }

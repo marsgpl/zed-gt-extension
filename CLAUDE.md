@@ -1,35 +1,87 @@
 # about
 
-this is a zed editor extension to highlight syntax for custom text file "gt". zed must build it automatically: no source code generation or compilation is needed in this repo.
+this is a zed editor extension that highlights syntax for the custom text format `*.gt`. zed builds it automatically: no source code generation or compilation is needed in this repo.
 
 ## instructions
 
-- never run commands like npx yourself, always ask user
-- never update the grammars folder (it is auto-generated)
+- never run commands like `npx` yourself, always ask user
+- never update the `grammars/` folder (it is auto-generated)
+- never edit `src/` (regenerated from `grammar.js` by `npx tree-sitter generate`)
 
-## example
+## what `.gt` describes
+
+a graph: nodes identified by name, with edges (relations) to other named nodes.
+
+## syntax
+
+a `.gt` file is a sequence of lines. each line is exactly one of: a blank line, a node line, an edge line. anything else is an error.
+
+### name
+
+used for node identifiers, edge identifiers, and edge targets. allowed characters are `a-zA-Z0-9_-` and single spaces between printable characters. specifically:
+
+- no leading or trailing whitespace
+- no consecutive spaces
+- no characters outside `[a-zA-Z0-9_-]` (other than the single internal spaces)
+
+regex: `[a-zA-Z0-9_-]+( [a-zA-Z0-9_-]+)*`
+
+### node line
+
+format: `<name>\n`
+
+- no indentation
+- the entire line is a single name
+
+### edge line
+
+format: `    <name>: <name>\n`
+
+- exactly 4 spaces of indentation
+- edge name (a name)
+- exactly one `:` immediately after the edge name (no space before)
+- exactly one space after the `:`
+- target node name (a name)
+- nothing else before the newline
+
+### valid example
 
 ```gt
-bank
-    is: institution
-    is: company
-    is: building
-bank
-    is: landform
-    is: shore
-    adjacent to: water
-apple
-    is: fruit
-inva!id
-  bad indent: ok?
+self
+    created by: yura
+    is: ai
 ```
 
-## how should it highlight syntax
+## errors
 
-- unindented line is a node name. valid: @type. invalid: @comment. validation regexp: /[a-z0-9_- ]+/.
-- indented line must have 2 parts: before ":" and after. if there is no ":" then treat whole line as @comment. left part is relation node name. same validation regexp. treat as @property if valid, @comment if invalid. right part is node name. same validation regexp. treat as @type if valid, @comment if invalid.
+any deviation from the format above is an error. examples:
 
-## available tokens
+- trailing whitespace
+- two or more consecutive spaces
+- missing space after `:`
+- space before `:`
+- indentation that is not exactly 4 spaces
+- a `:` on a non-indented line
+- multiple `:` on the same line
+- 4-space indent without a `:`
+- characters outside the allowed set
+
+errors are highlighted using the `@variant` capture so themes can render them as a highly visible style (red background, white text).
+
+## architecture
+
+- `grammar.js` — tree-sitter grammar source (strict; valid lines parse, anything else falls through to `error_line`)
+- `languages/gt/highlights.scm` — capture rules mapping grammar nodes to syntax tokens
+- `languages/gt/config.toml` — language metadata for zed
+- `extension.toml` — zed extension manifest; `commit` field pins the grammar revision zed pulls
+- `src/` — generated parser (do not edit)
+- `grammars/` — auto-managed grammar checkout (do not edit)
+
+## release
+
+after editing `grammar.js`, run `npm run release` to regenerate the parser, commit, bump the commit hash in `extension.toml`, and push. (the user runs this — never run `npx` yourself.)
+
+## available capture tokens
 
 @attribute, @boolean, @comment, @comment.doc, @constant, @constant.builtin,
 @constructor, @embedded, @emphasis, @emphasis.strong, @enum, @function, @hint,

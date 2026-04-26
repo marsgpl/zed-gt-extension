@@ -7,29 +7,32 @@ module.exports = grammar({
     source_file: $ => repeat($._line),
 
     _line: $ => choice(
-      $.blank_line,
+      $._blank_line,
       $.node_line,
-      $.property,
-      $.comment,
+      $.edge_line,
+      $.error_line,
     ),
 
-    blank_line: $ => /\n/,
+    _blank_line: $ => /\n/,
 
-    node_line: $ => seq($.node, /\n/),
-    node: $ => /[^\s\n][^\n]*/,
+    node_line: $ => seq(
+      $.node_name,
+      /\n/,
+    ),
 
-    property: $ => seq(
+    edge_line: $ => seq(
       "    ",
-      $.key,
+      $.edge_name,
       ":",
       " ",
-      $.value,
-      /\n/
+      $.target_name,
+      /\n/,
     ),
 
-    key: $ => /[^:\n]+/,
-    value: $ => /[^\n]+/,
+    node_name: $ => /[a-zA-Z0-9_\-]+( [a-zA-Z0-9_\-]+)*/,
+    edge_name: $ => /[a-zA-Z0-9_\-]+( [a-zA-Z0-9_\-]+)*/,
+    target_name: $ => /[a-zA-Z0-9_\-]+( [a-zA-Z0-9_\-]+)*/,
 
-    comment: $ => token(prec(-1, seq(/[ \t]+[^\n]*/, /\n/))),
-  }
+    error_line: $ => token(prec(-1, /[^\n]+\n?/)),
+  },
 });
