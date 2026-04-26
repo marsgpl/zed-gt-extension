@@ -3,3 +3,4 @@ grammar = "gt"
 path_suffixes = ["gt"]
 line_comments = ["# "]
 tab_size = 4
+auto_indent_using_last_non_empty_line = false
