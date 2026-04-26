@@ -1,28 +1,28 @@
-// Grammar strategy:
+// Strategy:
 //
-// `node_line` and `edge_line` are structural (not atomic) so each sub-part
-// (`node_name`, `edge_name`, `:`, `target_name`) is a separate tree-sitter
-// node and gets its own highlight capture.
+// `src/scanner.c` validates each line atomically before the grammar sees it.
+// For a valid node line or edge line it emits a zero-width marker token
+// (`_node_line_marker` / `_edge_line_marker`); the grammar then parses the
+// line structurally so each sub-part (name, `:`, target) gets its own
+// highlight capture. For anything malformed it emits a single atomic
+// `error_line` token covering the whole line, so the entire bad line is
+// highlighted as an error — tree-sitter's automatic error recovery never
+// gets a chance to commit to a partial parse and leak through.
 //
-// To prevent tree-sitter's automatic error recovery from masking deviations
-// (e.g. a stray space in the indent or a missing space after `:`), the
-// `conflicts` declaration combined with `prec.dynamic` enables GLR parsing:
-// for any line that could be either a valid structural line or an
-// `error_line`, both branches are explored in parallel. If the structural
-// branch fails partway, it dies and `error_line` wins for the whole line.
-//
-// `source_file` enforces that the file cannot start with an `edge_line`:
-// before the first `node_line`, only `blank_line` and `error_line` are valid
-// alternatives — so an indented first line falls through to `error_line`.
+// `source_file` puts `edge_line` only after the first `node_line`, so
+// `_edge_line_marker` is not in the scanner's `valid_symbols` set at the
+// top of the file — an indented first line falls through to `error_line`.
 
 module.exports = grammar({
   name: "gt",
 
   extras: $ => [],
 
-  conflicts: $ => [
-    [$.node_line, $.error_line],
-    [$.edge_line, $.error_line],
+  externals: $ => [
+    $._node_line_marker,
+    $._edge_line_marker,
+    $.error_line,
+    $.blank_line,
   ],
 
   rules: {
@@ -38,26 +38,24 @@ module.exports = grammar({
       $.error_line,
     ),
 
-    blank_line: $ => /\n/,
-
-    node_line: $ => prec.dynamic(2, seq(
+    node_line: $ => seq(
+      $._node_line_marker,
       $.node_name,
       /\n/,
-    )),
+    ),
 
-    edge_line: $ => prec.dynamic(2, seq(
+    edge_line: $ => seq(
+      $._edge_line_marker,
       "    ",
       $.edge_name,
       ":",
       " ",
       $.target_name,
       /\n/,
-    )),
+    ),
 
     node_name: $ => /[a-zA-Z0-9_\-]+( [a-zA-Z0-9_\-]+)*/,
     edge_name: $ => /[a-zA-Z0-9_\-]+( [a-zA-Z0-9_\-]+)*/,
     target_name: $ => /[a-zA-Z0-9_\-]+( [a-zA-Z0-9_\-]+)*/,
-
-    error_line: $ => token(prec(-1, /[^\n]+\n?/)),
   },
 });

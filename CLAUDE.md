@@ -6,7 +6,8 @@ this is a zed editor extension that highlights syntax for the custom text format
 
 - never run commands like `npx` yourself, always ask user
 - never update the `grammars/` folder (it is auto-generated)
-- never edit `src/` (regenerated from `grammar.js` by `npx tree-sitter generate`)
+- never edit `src/parser.c`, `src/grammar.json`, or `src/node-types.json` (regenerated from `grammar.js` by `npx tree-sitter generate`)
+- `src/scanner.c` is hand-written (the external scanner) and IS edited directly when changing line-validation behavior
 
 ## what `.gt` describes
 
@@ -91,7 +92,8 @@ errors are highlighted using the `@variant` capture so themes can render them as
 
 ## architecture
 
-- `grammar.js` — tree-sitter grammar source. `node_line` and `edge_line` are structural (not atomic) so each sub-part (`node_name`, `edge_name`, `:`, `target_name`) is its own tree-sitter node and gets its own highlight capture. to prevent tree-sitter's automatic error recovery from masking deviations (e.g. a stray space in the indent or a missing space after `:`), the `conflicts` declaration combined with `prec.dynamic` enables GLR parsing: for any line that could be either a valid structural line or an `error_line`, both branches are explored in parallel. if the structural branch fails partway, it dies and `error_line` wins for the whole line. `source_file` puts `edge_line` only inside the optional that follows the first `node_line`, so before any node is declared the only valid alternatives are `blank_line` and `error_line` — that's how indented-line-at-file-start gets rejected.
+- `grammar.js` — tree-sitter grammar source. declares four external tokens (`_node_line_marker`, `_edge_line_marker`, `error_line`, `blank_line`) that come from `src/scanner.c`. `node_line` and `edge_line` are structural (`seq` of sub-rules) so `node_name`, `edge_name`, `:`, and `target_name` each appear as their own tree-sitter nodes and get separate highlight captures. each structural rule starts with the corresponding zero-width marker, so the grammar only attempts a structural parse when the scanner has already validated the entire line. `source_file = (blank | error)*  (node_line _line*)?` — `_edge_line_marker` is unreachable from the start state, so it's not in the scanner's `valid_symbols` at the top of the file and indented first lines fall to `error_line`.
+- `src/scanner.c` — hand-written external scanner. for each line it reads the line into a buffer, validates the shape against the spec, and emits one of: `BLANK_LINE` (atomic, covers `\n`), `NODE_LINE_MARKER` (zero-width, valid node), `EDGE_LINE_MARKER` (zero-width, valid edge), or `ERROR_LINE` (atomic, covers the whole malformed line). validating in C, before tree-sitter's parser sees any tokens, avoids tree-sitter's automatic error recovery — there's no partial-parse path that could leak a bad line through as a valid one. `mark_end` is called at the start of scan so subsequent `advance` calls are lookahead only; the lexer resumes from the marked position so a zero-width marker leaves the line text in place for the structural rules to consume.
 - `languages/gt/highlights.scm` — capture rules: `node_name` and `target_name` → `@type`; `edge_name` → `@property`; `:` → `@punctuation.delimiter`; `error_line` and `(ERROR)` → `@variant`.
 - `languages/gt/config.toml` — language metadata for zed
 - `extension.toml` — zed extension manifest; `commit` field pins the grammar revision zed pulls

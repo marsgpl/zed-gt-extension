@@ -1,10 +1,5 @@
 [
   {
-    "type": "blank_line",
-    "named": true,
-    "fields": {}
-  },
-  {
     "type": "edge_line",
     "named": true,
     "fields": {},
@@ -92,6 +87,10 @@
   {
     "type": ":",
     "named": false
+  },
+  {
+    "type": "blank_line",
+    "named": true
   },
   {
     "type": "error_line",

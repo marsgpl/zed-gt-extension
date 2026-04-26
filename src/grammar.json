@@ -68,59 +68,55 @@
         }
       ]
     },
-    "blank_line": {
-      "type": "PATTERN",
-      "value": "\\n"
-    },
     "node_line": {
-      "type": "PREC_DYNAMIC",
-      "value": 2,
-      "content": {
-        "type": "SEQ",
-        "members": [
-          {
-            "type": "SYMBOL",
-            "name": "node_name"
-          },
-          {
-            "type": "PATTERN",
-            "value": "\\n"
-          }
-        ]
-      }
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "_node_line_marker"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "node_name"
+        },
+        {
+          "type": "PATTERN",
+          "value": "\\n"
+        }
+      ]
     },
     "edge_line": {
-      "type": "PREC_DYNAMIC",
-      "value": 2,
-      "content": {
-        "type": "SEQ",
-        "members": [
-          {
-            "type": "STRING",
-            "value": "    "
-          },
-          {
-            "type": "SYMBOL",
-            "name": "edge_name"
-          },
-          {
-            "type": "STRING",
-            "value": ":"
-          },
-          {
-            "type": "STRING",
-            "value": " "
-          },
-          {
-            "type": "SYMBOL",
-            "name": "target_name"
-          },
-          {
-            "type": "PATTERN",
-            "value": "\\n"
-          }
-        ]
-      }
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "_edge_line_marker"
+        },
+        {
+          "type": "STRING",
+          "value": "    "
+        },
+        {
+          "type": "SYMBOL",
+          "name": "edge_name"
+        },
+        {
+          "type": "STRING",
+          "value": ":"
+        },
+        {
+          "type": "STRING",
+          "value": " "
+        },
+        {
+          "type": "SYMBOL",
+          "name": "target_name"
+        },
+        {
+          "type": "PATTERN",
+          "value": "\\n"
+        }
+      ]
     },
     "node_name": {
       "type": "PATTERN",
@@ -133,32 +129,29 @@
     "target_name": {
       "type": "PATTERN",
       "value": "[a-zA-Z0-9_\\-]+( [a-zA-Z0-9_\\-]+)*"
-    },
-    "error_line": {
-      "type": "TOKEN",
-      "content": {
-        "type": "PREC",
-        "value": -1,
-        "content": {
-          "type": "PATTERN",
-          "value": "[^\\n]+\\n?"
-        }
-      }
     }
   },
   "extras": [],
-  "conflicts": [
-    [
-      "node_line",
-      "error_line"
-    ],
-    [
-      "edge_line",
-      "error_line"
-    ]
-  ],
+  "conflicts": [],
   "precedences": [],
-  "externals": [],
+  "externals": [
+    {
+      "type": "SYMBOL",
+      "name": "_node_line_marker"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_edge_line_marker"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "error_line"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "blank_line"
+    }
+  ],
   "inline": [],
   "supertypes": [],
   "reserved": {}
