@@ -8,17 +8,8 @@
         {
           "type": "REPEAT",
           "content": {
-            "type": "CHOICE",
-            "members": [
-              {
-                "type": "SYMBOL",
-                "name": "blank_line"
-              },
-              {
-                "type": "SYMBOL",
-                "name": "error_line"
-              }
-            ]
+            "type": "SYMBOL",
+            "name": "error_line"
           }
         },
         {
@@ -50,10 +41,6 @@
     "_line": {
       "type": "CHOICE",
       "members": [
-        {
-          "type": "SYMBOL",
-          "name": "blank_line"
-        },
         {
           "type": "SYMBOL",
           "name": "node_line"
@@ -146,10 +133,6 @@
     {
       "type": "SYMBOL",
       "name": "error_line"
-    },
-    {
-      "type": "SYMBOL",
-      "name": "blank_line"
     }
   ],
   "inline": [],

@@ -22,17 +22,15 @@ module.exports = grammar({
     $._node_line_marker,
     $._edge_line_marker,
     $.error_line,
-    $.blank_line,
   ],
 
   rules: {
     source_file: $ => seq(
-      repeat(choice($.blank_line, $.error_line)),
+      repeat($.error_line),
       optional(seq($.node_line, repeat($._line))),
     ),
 
     _line: $ => choice(
-      $.blank_line,
       $.node_line,
       $.edge_line,
       $.error_line,

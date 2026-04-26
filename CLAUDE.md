@@ -15,9 +15,11 @@ a graph: nodes identified by name, with edges (relations) to other named nodes.
 
 ## syntax
 
-a `.gt` file is a sequence of lines. each line is exactly one of: a blank line, a node line, an edge line. anything else is an error.
+a `.gt` file is a sequence of lines. each line is exactly one of: a node line or an edge line. anything else is an error.
 
-the file must not start with an edge line. before the first node line, only blank lines are allowed; any indented line that appears before any node is an error (an edge with no node to attach to is meaningless).
+blank lines are not allowed: any two consecutive `\n` bytes (i.e. an empty line) are an error.
+
+the file must not start with an edge line. an indented line that appears before any node is an error (an edge with no node to attach to is meaningless).
 
 ### name
 
@@ -70,6 +72,7 @@ any deviation from the format above is an error. examples:
 - characters outside the allowed set
 - a final line without a trailing `\n` (the grammar requires line termination)
 - an indented (edge) line before any node line has been declared
+- a blank line (two consecutive `\n`)
 
 errors are highlighted using the `@variant` capture so themes can render them as a highly visible style (red background, white text).
 
@@ -93,7 +96,7 @@ errors are highlighted using the `@variant` capture so themes can render them as
 ## architecture
 
 - `grammar.js` — tree-sitter grammar source. declares four external tokens (`_node_line_marker`, `_edge_line_marker`, `error_line`, `blank_line`) that come from `src/scanner.c`. `node_line` and `edge_line` are structural (`seq` of sub-rules) so `node_name`, `edge_name`, `:`, and `target_name` each appear as their own tree-sitter nodes and get separate highlight captures. each structural rule starts with the corresponding zero-width marker, so the grammar only attempts a structural parse when the scanner has already validated the entire line. `source_file = (blank | error)*  (node_line _line*)?` — `_edge_line_marker` is unreachable from the start state, so it's not in the scanner's `valid_symbols` at the top of the file and indented first lines fall to `error_line`.
-- `src/scanner.c` — hand-written external scanner. for each line it reads the line into a buffer, validates the shape against the spec, and emits one of: `BLANK_LINE` (atomic, covers `\n`), `NODE_LINE_MARKER` (zero-width, valid node), `EDGE_LINE_MARKER` (zero-width, valid edge), or `ERROR_LINE` (atomic, covers the whole malformed line). validating in C, before tree-sitter's parser sees any tokens, avoids tree-sitter's automatic error recovery — there's no partial-parse path that could leak a bad line through as a valid one. `mark_end` is called at the start of scan so subsequent `advance` calls are lookahead only; the lexer resumes from the marked position so a zero-width marker leaves the line text in place for the structural rules to consume.
+- `src/scanner.c` — hand-written external scanner. for each line it reads the line into a buffer, validates the shape against the spec, and emits one of: `NODE_LINE_MARKER` (zero-width, valid node), `EDGE_LINE_MARKER` (zero-width, valid edge), or `ERROR_LINE` (atomic, covers the whole malformed line — including blank lines, which are disallowed). validating in C, before tree-sitter's parser sees any tokens, avoids tree-sitter's automatic error recovery — there's no partial-parse path that could leak a bad line through as a valid one. `mark_end` is called at the start of scan so subsequent `advance` calls are lookahead only; the lexer resumes from the marked position so a zero-width marker leaves the line text in place for the structural rules to consume.
 - `languages/gt/highlights.scm` — capture rules: `node_name` and `target_name` → `@type`; `edge_name` → `@property`; `:` → `@punctuation.delimiter`; `error_line` and `(ERROR)` → `@variant`.
 - `languages/gt/config.toml` — language metadata for zed
 - `extension.toml` — zed extension manifest; `commit` field pins the grammar revision zed pulls

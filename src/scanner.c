@@ -6,7 +6,6 @@ enum TokenType {
   NODE_LINE_MARKER,
   EDGE_LINE_MARKER,
   ERROR_LINE,
-  BLANK_LINE,
 };
 
 void *tree_sitter_gt_external_scanner_create(void) { return NULL; }
@@ -65,11 +64,12 @@ bool tree_sitter_gt_external_scanner_scan(
     lexer->advance(lexer, false);
   }
 
-  // Blank line: just \n.
+  // Blank line (two consecutive \n in the byte stream): not allowed by spec.
+  // Emit ERROR_LINE covering the lone \n so the empty line is highlighted.
   if (len == 0) {
     if (!has_nl) return false; // EOF
-    if (!valid_symbols[BLANK_LINE]) return false;
-    lexer->result_symbol = BLANK_LINE;
+    if (!valid_symbols[ERROR_LINE]) return false;
+    lexer->result_symbol = ERROR_LINE;
     lexer->mark_end(lexer); // include the \n
     return true;
   }
