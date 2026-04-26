@@ -53,6 +53,10 @@
       "required": false,
       "types": [
         {
+          "type": "blank_error",
+          "named": true
+        },
+        {
           "type": "edge_line",
           "named": true
         },
@@ -83,6 +87,10 @@
   {
     "type": ":",
     "named": false
+  },
+  {
+    "type": "blank_error",
+    "named": true
   },
   {
     "type": "error_line",

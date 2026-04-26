@@ -6,6 +6,8 @@ enum TokenType {
   NODE_LINE_MARKER,
   EDGE_LINE_MARKER,
   ERROR_LINE,
+  EOL,
+  BLANK_ERROR,
 };
 
 void *tree_sitter_gt_external_scanner_create(void) { return NULL; }
@@ -46,43 +48,46 @@ bool tree_sitter_gt_external_scanner_scan(
 ) {
   (void)payload;
 
-  // Mark token start — zero-width by default. mark_end records the
-  // token's end position; subsequent advance() calls during this scan
-  // are lookahead only and don't extend the token. After scan returns,
-  // the lexer resumes from the marked position, so we can read the
-  // whole line for validation and still emit a zero-width marker.
+  // Default token to zero-width at the start position. Subsequent
+  // advance() calls are lookahead; mark_end can be called again later
+  // to extend the token.
   lexer->mark_end(lexer);
 
+  if (lexer->lookahead == 0) {
+    return false; // EOF
+  }
+
+  // Separator case: lookahead is \n. We're between lines (or before any).
+  if (lexer->lookahead == '\n') {
+    lexer->advance(lexer, false);
+
+    if (lexer->lookahead == '\n') {
+      // Two or more consecutive \n: blank-line region.
+      while (lexer->lookahead == '\n') {
+        lexer->advance(lexer, false);
+      }
+      if (!valid_symbols[BLANK_ERROR]) return false;
+      lexer->result_symbol = BLANK_ERROR;
+      lexer->mark_end(lexer);
+      return true;
+    }
+
+    // Single \n: ordinary line terminator.
+    if (!valid_symbols[EOL]) return false;
+    lexer->result_symbol = EOL;
+    lexer->mark_end(lexer);
+    return true;
+  }
+
+  // Content case: read the line into a buffer for shape validation.
   int32_t buf[MAX_LINE];
   int len = 0;
   while (lexer->lookahead != '\n' && lexer->lookahead != 0 && len < MAX_LINE - 1) {
     buf[len++] = lexer->lookahead;
     lexer->advance(lexer, false);
   }
-  bool has_nl = (lexer->lookahead == '\n');
-  if (has_nl) {
-    lexer->advance(lexer, false);
-  }
 
-  // Blank line (two consecutive \n in the byte stream): not allowed by spec.
-  // Emit ERROR_LINE covering the lone \n so the empty line is highlighted.
-  if (len == 0) {
-    if (!has_nl) return false; // EOF
-    if (!valid_symbols[ERROR_LINE]) return false;
-    lexer->result_symbol = ERROR_LINE;
-    lexer->mark_end(lexer); // include the \n
-    return true;
-  }
-
-  // No trailing newline at EOF: the line is malformed by spec.
-  if (!has_nl) {
-    if (!valid_symbols[ERROR_LINE]) return false;
-    lexer->result_symbol = ERROR_LINE;
-    lexer->mark_end(lexer);
-    return true;
-  }
-
-  // Valid node line: whole line content is a name.
+  // Valid node line: whole line is a name.
   if (valid_symbols[NODE_LINE_MARKER] && is_valid_name(buf, 0, len)) {
     lexer->result_symbol = NODE_LINE_MARKER;
     // Zero-width: do not extend mark_end; grammar parses the line.
@@ -108,10 +113,11 @@ bool tree_sitter_gt_external_scanner_scan(
     }
   }
 
-  // Anything else: whole line is one atomic error token.
+  // Anything else: malformed content — atomic error_line covering the
+  // content only (no \n; the next scan call will emit EOL/BLANK_ERROR).
   if (valid_symbols[ERROR_LINE]) {
     lexer->result_symbol = ERROR_LINE;
-    lexer->mark_end(lexer); // covers the whole line including \n
+    lexer->mark_end(lexer);
     return true;
   }
 

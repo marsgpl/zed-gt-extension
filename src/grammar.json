@@ -9,7 +9,7 @@
           "type": "REPEAT",
           "content": {
             "type": "SYMBOL",
-            "name": "error_line"
+            "name": "_pre_item"
           }
         },
         {
@@ -26,7 +26,7 @@
                   "type": "REPEAT",
                   "content": {
                     "type": "SYMBOL",
-                    "name": "_line"
+                    "name": "_main_thing"
                   }
                 }
               ]
@@ -38,20 +38,73 @@
         }
       ]
     },
-    "_line": {
+    "_pre_item": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "error_line"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "_sep"
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_sep"
+        }
+      ]
+    },
+    "_main_thing": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "_sep"
+            },
+            {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "node_line"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "edge_line"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "error_line"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "_sep"
+        }
+      ]
+    },
+    "_sep": {
       "type": "CHOICE",
       "members": [
         {
           "type": "SYMBOL",
-          "name": "node_line"
+          "name": "_eol"
         },
         {
           "type": "SYMBOL",
-          "name": "edge_line"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "error_line"
+          "name": "blank_error"
         }
       ]
     },
@@ -65,10 +118,6 @@
         {
           "type": "SYMBOL",
           "name": "node_name"
-        },
-        {
-          "type": "PATTERN",
-          "value": "\\n"
         }
       ]
     },
@@ -98,10 +147,6 @@
         {
           "type": "SYMBOL",
           "name": "target_name"
-        },
-        {
-          "type": "PATTERN",
-          "value": "\\n"
         }
       ]
     },
@@ -133,6 +178,14 @@
     {
       "type": "SYMBOL",
       "name": "error_line"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "_eol"
+    },
+    {
+      "type": "SYMBOL",
+      "name": "blank_error"
     }
   ],
   "inline": [],

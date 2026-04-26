@@ -4,4 +4,5 @@
 ":" @punctuation.delimiter
 
 (error_line) @variant
+(blank_error) @variant
 (ERROR) @variant

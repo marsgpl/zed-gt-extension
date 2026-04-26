@@ -1,17 +1,18 @@
 // Strategy:
 //
 // `src/scanner.c` validates each line atomically before the grammar sees it.
-// For a valid node line or edge line it emits a zero-width marker token
-// (`_node_line_marker` / `_edge_line_marker`); the grammar then parses the
-// line structurally so each sub-part (name, `:`, target) gets its own
-// highlight capture. For anything malformed it emits a single atomic
-// `error_line` token covering the whole line, so the entire bad line is
-// highlighted as an error — tree-sitter's automatic error recovery never
-// gets a chance to commit to a partial parse and leak through.
+// For a valid node line or edge line it emits a zero-width marker token; the
+// grammar then parses the line structurally so each sub-part (name, `:`,
+// target) gets its own highlight capture. For malformed content it emits a
+// single atomic `error_line` token covering the bad content (no trailing \n).
 //
-// `source_file` puts `edge_line` only after the first `node_line`, so
-// `_edge_line_marker` is not in the scanner's `valid_symbols` set at the
-// top of the file — an indented first line falls through to `error_line`.
+// Line terminators are emitted as separate tokens so blank-line errors can
+// span multiple bytes (and therefore render visibly):
+//   `_eol`         — exactly one `\n` between valid lines
+//   `blank_error`  — two or more consecutive `\n` (a blank line region)
+//
+// `source_file` puts `edge_line` only after the first `node_line`, so an
+// indented first line falls through to `error_line` in the pre-line phase.
 
 module.exports = grammar({
   name: "gt",
@@ -22,24 +23,34 @@ module.exports = grammar({
     $._node_line_marker,
     $._edge_line_marker,
     $.error_line,
+    $._eol,
+    $.blank_error,
   ],
 
   rules: {
     source_file: $ => seq(
-      repeat($.error_line),
-      optional(seq($.node_line, repeat($._line))),
+      repeat($._pre_item),
+      optional(seq(
+        $.node_line,
+        repeat($._main_thing),
+      )),
     ),
 
-    _line: $ => choice(
-      $.node_line,
-      $.edge_line,
-      $.error_line,
+    _pre_item: $ => choice(
+      seq($.error_line, $._sep),
+      $._sep,
     ),
+
+    _main_thing: $ => choice(
+      seq($._sep, choice($.node_line, $.edge_line, $.error_line)),
+      $._sep,
+    ),
+
+    _sep: $ => choice($._eol, $.blank_error),
 
     node_line: $ => seq(
       $._node_line_marker,
       $.node_name,
-      /\n/,
     ),
 
     edge_line: $ => seq(
@@ -49,7 +60,6 @@ module.exports = grammar({
       ":",
       " ",
       $.target_name,
-      /\n/,
     ),
 
     node_name: $ => /[a-zA-Z0-9_\-]+( [a-zA-Z0-9_\-]+)*/,
