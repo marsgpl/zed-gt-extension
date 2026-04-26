@@ -16,6 +16,8 @@ a graph: nodes identified by name, with edges (relations) to other named nodes.
 
 a `.gt` file is a sequence of lines. each line is exactly one of: a blank line, a node line, an edge line. anything else is an error.
 
+the file must not start with an edge line. before the first node line, only blank lines are allowed; any indented line that appears before any node is an error (an edge with no node to attach to is meaningless).
+
 ### name
 
 used for node identifiers, edge identifiers, and edge targets. allowed characters are `a-zA-Z0-9_-` and single spaces between printable characters. specifically:
@@ -66,6 +68,7 @@ any deviation from the format above is an error. examples:
 - 4-space indent without a `:`
 - characters outside the allowed set
 - a final line without a trailing `\n` (the grammar requires line termination)
+- an indented (edge) line before any node line has been declared
 
 errors are highlighted using the `@variant` capture so themes can render them as a highly visible style (red background, white text).
 
@@ -88,8 +91,8 @@ errors are highlighted using the `@variant` capture so themes can render them as
 
 ## architecture
 
-- `grammar.js` — tree-sitter grammar source. each line type (`node_line`, `edge_line`, `error_line`, `blank_line`) is a single atomic regex token. this is intentional: structural rules with shared sub-tokens let tree-sitter's lexer commit to a partial token (e.g. the literal `"    "` indent) and then trigger automatic error recovery, which can mask deviations or split a malformed line into a valid prefix + ERROR suffix. atomic line tokens force the lexer to match the entire line or reject it, so any deviation falls cleanly through to `error_line`.
-- `languages/gt/highlights.scm` — capture rules. since `node_line` and `edge_line` are atomic, the whole line gets one capture (no separate colors for `edge_name` vs `target_name`).
+- `grammar.js` — tree-sitter grammar source. `node_line` and `edge_line` are structural (not atomic) so each sub-part (`node_name`, `edge_name`, `:`, `target_name`) is its own tree-sitter node and gets its own highlight capture. to prevent tree-sitter's automatic error recovery from masking deviations (e.g. a stray space in the indent or a missing space after `:`), the `conflicts` declaration combined with `prec.dynamic` enables GLR parsing: for any line that could be either a valid structural line or an `error_line`, both branches are explored in parallel. if the structural branch fails partway, it dies and `error_line` wins for the whole line. `source_file` puts `edge_line` only inside the optional that follows the first `node_line`, so before any node is declared the only valid alternatives are `blank_line` and `error_line` — that's how indented-line-at-file-start gets rejected.
+- `languages/gt/highlights.scm` — capture rules: `node_name` and `target_name` → `@type`; `edge_name` → `@property`; `:` → `@punctuation.delimiter`; `error_line` and `(ERROR)` → `@variant`.
 - `languages/gt/config.toml` — language metadata for zed
 - `extension.toml` — zed extension manifest; `commit` field pins the grammar revision zed pulls
 - `src/` — generated parser (do not edit)
