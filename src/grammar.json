@@ -14,7 +14,7 @@
       "members": [
         {
           "type": "SYMBOL",
-          "name": "_blank_line"
+          "name": "blank_line"
         },
         {
           "type": "SYMBOL",
@@ -30,63 +30,26 @@
         }
       ]
     },
-    "_blank_line": {
-      "type": "PATTERN",
-      "value": "\\n"
+    "blank_line": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PATTERN",
+        "value": "\\n"
+      }
     },
     "node_line": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "SYMBOL",
-          "name": "node_name"
-        },
-        {
-          "type": "PATTERN",
-          "value": "\\n"
-        }
-      ]
+      "type": "TOKEN",
+      "content": {
+        "type": "PATTERN",
+        "value": "[a-zA-Z0-9_\\-]+( [a-zA-Z0-9_\\-]+)*\\n"
+      }
     },
     "edge_line": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "STRING",
-          "value": "    "
-        },
-        {
-          "type": "SYMBOL",
-          "name": "edge_name"
-        },
-        {
-          "type": "STRING",
-          "value": ":"
-        },
-        {
-          "type": "STRING",
-          "value": " "
-        },
-        {
-          "type": "SYMBOL",
-          "name": "target_name"
-        },
-        {
-          "type": "PATTERN",
-          "value": "\\n"
-        }
-      ]
-    },
-    "node_name": {
-      "type": "PATTERN",
-      "value": "[a-zA-Z0-9_\\-]+( [a-zA-Z0-9_\\-]+)*"
-    },
-    "edge_name": {
-      "type": "PATTERN",
-      "value": "[a-zA-Z0-9_\\-]+( [a-zA-Z0-9_\\-]+)*"
-    },
-    "target_name": {
-      "type": "PATTERN",
-      "value": "[a-zA-Z0-9_\\-]+( [a-zA-Z0-9_\\-]+)*"
+      "type": "TOKEN",
+      "content": {
+        "type": "PATTERN",
+        "value": "    [a-zA-Z0-9_\\-]+( [a-zA-Z0-9_\\-]+)*: [a-zA-Z0-9_\\-]+( [a-zA-Z0-9_\\-]+)*\\n"
+      }
     },
     "error_line": {
       "type": "TOKEN",

@@ -1,7 +1,5 @@
-(node_name) @type
-(edge_name) @property
-(target_name) @type
-":" @punctuation.delimiter
+(node_line) @type
+(edge_line) @property
 
 (error_line) @variant
 (ERROR) @variant

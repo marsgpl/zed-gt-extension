@@ -65,13 +65,31 @@ any deviation from the format above is an error. examples:
 - multiple `:` on the same line
 - 4-space indent without a `:`
 - characters outside the allowed set
+- a final line without a trailing `\n` (the grammar requires line termination)
 
 errors are highlighted using the `@variant` capture so themes can render them as a highly visible style (red background, white text).
 
+### theming errors red
+
+`@variant` is rendered with whatever style the active zed theme defines for `variant` — which is usually not red. to force red bg / white text, the user adds an override to `~/.config/zed/settings.json`:
+
+```json
+{
+  "experimental.theme_overrides": {
+    "syntax": {
+      "variant": {
+        "color": "#ffffff",
+        "background_color": "#cc0000"
+      }
+    }
+  }
+}
+```
+
 ## architecture
 
-- `grammar.js` — tree-sitter grammar source (strict; valid lines parse, anything else falls through to `error_line`)
-- `languages/gt/highlights.scm` — capture rules mapping grammar nodes to syntax tokens
+- `grammar.js` — tree-sitter grammar source. each line type (`node_line`, `edge_line`, `error_line`, `blank_line`) is a single atomic regex token. this is intentional: structural rules with shared sub-tokens let tree-sitter's lexer commit to a partial token (e.g. the literal `"    "` indent) and then trigger automatic error recovery, which can mask deviations or split a malformed line into a valid prefix + ERROR suffix. atomic line tokens force the lexer to match the entire line or reject it, so any deviation falls cleanly through to `error_line`.
+- `languages/gt/highlights.scm` — capture rules. since `node_line` and `edge_line` are atomic, the whole line gets one capture (no separate colors for `edge_name` vs `target_name`).
 - `languages/gt/config.toml` — language metadata for zed
 - `extension.toml` — zed extension manifest; `commit` field pins the grammar revision zed pulls
 - `src/` — generated parser (do not edit)

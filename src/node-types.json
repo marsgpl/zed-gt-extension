@@ -1,49 +1,5 @@
 [
   {
-    "type": "edge_line",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "edge_name",
-          "named": true
-        },
-        {
-          "type": "target_name",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "edge_name",
-    "named": true,
-    "fields": {}
-  },
-  {
-    "type": "node_line",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "node_name",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "node_name",
-    "named": true,
-    "fields": {}
-  },
-  {
     "type": "source_file",
     "named": true,
     "root": true,
@@ -52,6 +8,10 @@
       "multiple": true,
       "required": false,
       "types": [
+        {
+          "type": "blank_line",
+          "named": true
+        },
         {
           "type": "edge_line",
           "named": true
@@ -68,24 +28,19 @@
     }
   },
   {
-    "type": "target_name",
-    "named": true,
-    "fields": {}
+    "type": "blank_line",
+    "named": true
   },
   {
-    "type": " ",
-    "named": false
-  },
-  {
-    "type": "    ",
-    "named": false
-  },
-  {
-    "type": ":",
-    "named": false
+    "type": "edge_line",
+    "named": true
   },
   {
     "type": "error_line",
+    "named": true
+  },
+  {
+    "type": "node_line",
     "named": true
   }
 ]
